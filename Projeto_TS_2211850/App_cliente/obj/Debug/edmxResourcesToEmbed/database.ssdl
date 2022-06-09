@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="database.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="databaseStoreContainer">
+    <EntitySet Name="users" EntityType="database.Store.users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="messages" EntityType="database.Store.messages" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="usermessage_sender" Association="database.Store.usermessage_sender">
+      <End Role="user" EntitySet="users" />
+      <End Role="message" EntitySet="messages" />
+    </AssociationSet>
+    <AssociationSet Name="usermessage_receiver" Association="database.Store.usermessage_receiver">
+      <End Role="user" EntitySet="users" />
+      <End Role="message" EntitySet="messages" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="username" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="salt" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="messages">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="text" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="userId" Type="int" Nullable="false" />
+    <Property Name="userId1" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="usermessage_sender">
+    <End Role="user" Type="database.Store.users" Multiplicity="1" />
+    <End Role="message" Type="database.Store.messages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="message">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="usermessage_receiver">
+    <End Role="user" Type="database.Store.users" Multiplicity="1" />
+    <End Role="message" Type="database.Store.messages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="message">
+        <PropertyRef Name="userId1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

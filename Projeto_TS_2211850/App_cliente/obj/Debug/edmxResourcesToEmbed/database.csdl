@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="database" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="databaseContainer" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="users" EntityType="database.user" />
+    <EntitySet Name="messages" EntityType="database.message" />
+    <AssociationSet Name="usermessage_sender" Association="database.usermessage_sender">
+      <End Role="user" EntitySet="users" />
+      <End Role="message" EntitySet="messages" />
+    </AssociationSet>
+    <AssociationSet Name="usermessage_receiver" Association="database.usermessage_receiver">
+      <End Role="user" EntitySet="users" />
+      <End Role="message" EntitySet="messages" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" Nullable="false" />
+    <Property Name="password" Type="String" Nullable="false" />
+    <Property Name="salt" Type="String" Nullable="false" />
+    <NavigationProperty Name="messages_sender" Relationship="database.usermessage_sender" FromRole="user" ToRole="message" />
+    <NavigationProperty Name="messages_receiver" Relationship="database.usermessage_receiver" FromRole="user" ToRole="message" />
+  </EntityType>
+  <EntityType Name="message">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="text" Type="String" Nullable="false" />
+    <NavigationProperty Name="user_sender" Relationship="database.usermessage_sender" FromRole="message" ToRole="user" />
+    <Property Name="userId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="user_receiver" Relationship="database.usermessage_receiver" FromRole="message" ToRole="user" />
+    <Property Name="userId1" Type="Int32" Nullable="false" />
+  </EntityType>
+  <Association Name="usermessage_sender">
+    <End Type="database.user" Role="user" Multiplicity="1" />
+    <End Type="database.message" Role="message" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="message">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="usermessage_receiver">
+    <End Type="database.user" Role="user" Multiplicity="1" />
+    <End Type="database.message" Role="message" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="message">
+        <PropertyRef Name="userId1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
